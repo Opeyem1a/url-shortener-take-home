@@ -2,81 +2,88 @@
 {% load static %}
 
 {% block content %}
-<div class="flex-1 mt-32">
-    <div class="flex flex-col flex-wrap container px-5 py-10 space-y-4 mx-auto text-gray-700 bg-gray-50 rounded-xl shadow-lg">
-        
-        {% if messages %}
-        <div class="text-sm text-center bg-red-100 rounded-2xl px-4 py-2">
-            {% for message in messages %}
-            <div>{{ message }}</div>
-            {% endfor %}
-        </div>
-        {% endif %}
+    <div class="flex-1 mt-32">
+        <div class="flex flex-col flex-wrap container px-5 py-10 space-y-4 mx-auto text-gray-700 bg-gray-50 rounded-xl shadow-lg">
 
-        <div class="py-4 text-center tracking-wide text-2xl font-bold">Generate a random short url or provide a custom hash.</div>
-
-        <form method="post" class="flex flex-col justify-between">
-            {% csrf_token %}
-            {{ form.non_field_errors }}
-
-            <div class="flex flex-col w-full space-y-2">
-                <div class="w-full space-y-4">
-                    <input
-                        id='URL'
-                        required
-                        placeholder="URL"
-                        value="{{ form.url.value }}"
-                        type="text" id="url"
-                        name="url"
-                        class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500  focus:ring-2 focus:ring-indigo-200 outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                    >
-                    <span class="text-xs text-red-400">{{ form.url.errors }}</span>
+            {% if messages %}
+                <div class="text-sm text-center bg-red-100 rounded-2xl px-4 py-2">
+                    {% for message in messages %}
+                        <div>{{ message }}</div>
+                    {% endfor %}
                 </div>
-                <div class="w-full">
-                    <input
-                        maxlength="10"
-                        placeholder="Custom hash (optional) - <not implemented>"
-                        value="{{ form.hashed_url.value }}"
-                        type="text" id="hashed_url" name="hashed_url"
-                        class="flex-1 mb-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500  focus:ring-2 focus:ring-indigo-200 outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                    >
-                    <span class="text-xs text-red-400">{{ form.hashed_url.errors }}</span>
-                </div>
+            {% endif %}
+
+            <div class="py-4 text-center tracking-wide text-2xl font-bold">Generate a random short url or provide a
+                custom hash.
             </div>
-            <button
-                id="create"
-                onclick="setLoading()"
-                type="submit"
-                class="transform hover:scale-110 transition duration-150 ease-in-out shadow-md flex font-bold mx-auto mt-8 border py-2 px-8 focus:outline-none hover:bg-gray-100 rounded text-xs">
+
+            <form method="post" class="flex flex-col justify-between">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+
+                <div class="flex flex-col w-full space-y-2">
+                    <div class="w-full space-y-4">
+                        <input
+                                id="url"
+                                required
+                                placeholder="URL"
+                                value="{{ form.url.value }}"
+                                type="text"
+                                name="url"
+                                class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500  focus:ring-2 focus:ring-indigo-200 outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                        >
+                        <span class="text-xs text-red-400">{{ form.url.errors }}</span>
+                    </div>
+                    <div class="w-full">
+                        <input
+                                id="custom_hash"
+                                maxlength="10"
+                                placeholder="Custom hash (optional)"
+                                value="{{ form.custom_hash.value }}"
+                                type="text"  name="custom_hash"
+                                class="flex-1 mb-1 w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500  focus:ring-2 focus:ring-indigo-200 outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                        >
+                        <span class="text-xs text-red-400">{{ form.custom_hash.errors }}</span>
+                    </div>
+                </div>
+                <button
+                        id="create"
+                        onclick="setLoading()"
+                        type="submit"
+                        class="transform hover:scale-110 transition duration-150 ease-in-out shadow-md flex font-bold mx-auto mt-8 border py-2 px-8 focus:outline-none hover:bg-gray-100 rounded text-xs">
                     Create
-            </button>
-        </form>
+                </button>
+            </form>
 
-        {% if short_url %}
-        <div class="flex flex-col md:flex-row justify-between items-center py-4 space-x-2 rounded-lg p-2 text-sm font-mono">
-            <input class="flex-1 w-full bg-gray-100 p-1 rounded border" id="shortUrl" value="{{short_url}}" type='text' readonly/>
-            <div class="flex mt-4 md:mt-0 space-x-2">
-                <button class="border px-2 py-1 rounded transform hover:scale-110 transition duration-150 ease-in-out" onclick="copyText()">Copy</button>
-                <a class="border px-2 py-1 rounded transform hover:scale-110 transition duration-150 ease-in-out" target="blank" href="{{short_url}}">Go to page</a>
-            </div>
+            {% if short_url %}
+                <div class="flex flex-col md:flex-row justify-between items-center py-4 space-x-2 rounded-lg p-2 text-sm font-mono">
+                    <input class="flex-1 w-full bg-gray-100 p-1 rounded border" id="shortUrl" value="{{ short_url }}"
+                           type='text' readonly/>
+                    <div class="flex mt-4 md:mt-0 space-x-2">
+                        <button class="border px-2 py-1 rounded transform hover:scale-110 transition duration-150 ease-in-out"
+                                onclick="copyText()">Copy
+                        </button>
+                        <a class="border px-2 py-1 rounded transform hover:scale-110 transition duration-150 ease-in-out"
+                           target="blank" href="{{ short_url }}">Go to page</a>
+                    </div>
+                </div>
+            {% endif %}
         </div>
-        {% endif %}
     </div>
-</div>
 
-<script type="text/javascript">
-    function copyText() {
-      let copyText = document.getElementById("shortUrl");
-      copyText.select();
-      copyText.setSelectionRange(0, 99999);
-      document.execCommand("copy");
-    }
+    <script type="text/javascript">
+        function copyText() {
+            let copyText = document.getElementById("shortUrl");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            document.execCommand("copy");
+        }
 
-    function setLoading() {
-      let url = document.getElementById("URL");
-      if (url.value) {
-        document.getElementById("create").innerHTML = "Loading...";
-      }
-    }
-</script>
+        function setLoading() {
+            let url = document.getElementById("url");
+            if (url.value) {
+                document.getElementById("create").innerHTML = "Loading...";
+            }
+        }
+    </script>
 {% endblock content %}
